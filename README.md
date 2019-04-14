@@ -20,14 +20,12 @@ In the current state of browsers, `localStorage` is still the most stable storag
 - `options`: Optional configuration object
     - `timeout`: If timeout is specified and the value has not been persisted by the time timeout milliseconds have passed, the persistence will be carried out during the next idle period.
 
-__Return__
-A Promise that resolves when the value has been successfully persisted, or when rejects when failed.
+Return: A Promise that resolves when the value has been successfully persisted, or when rejects when failed.
 
 
 #### `hasPending()`
 
-__Return__
-True when there are any set operations that have not been carried out.
+Return: True when there are any set operations that have not been carried out.
 
 
 #### `commit()`
