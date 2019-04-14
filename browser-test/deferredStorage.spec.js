@@ -1,140 +1,173 @@
 import "babel-polyfill"
 import deferredStorage from "../index.js"
 
-// Helper functions
-
 const range = n =>
     Array.apply(null, Array(n)).map((_, i) => {
         return i
     })
 
-/*
- * - A new IDB is created for testing per each run of the test suite
- *   to make sure clean state
- *
- * Contributor notes:
- *
- * - When writing new test, avoid the need to clean up data after test.
- *   This could be archived simply by not sharing the same key with
- *   different test.
- */
 describe("deferredStorage", () => {
-    beforeEach(() => localStorage.clear())
-
-    it("getItem() should return null if the key does not exist", async function(done) {
-        try {
-            const v = await deferredStorage.getItem("not_exist")
-            expect(v).toBeNull()
-            done()
-        } catch (e) {
-            done.fail(e)
-        }
+    beforeEach(() => {
+        localStorage.clear()
+        deferredStorage.clear()
     })
 
-    it("setWhenIdle()/getItem() basic test", async function(done) {
+    //it("setWhenIdle() / get() simple test", async function(done) {
+        //try {
+            //await deferredStorage.setWhenIdle("five", 5)
+
+            //expect(localStorage.getItem("five")).toEqual("5")
+            //expect(deferredStorage.get("five")).toEqual(5)
+            //done()
+        //} catch (e) {
+            //done.fail(e)
+        //}
+    //})
+
+    //const VALUE_TYPE_TEST_DATA = [
+        //[1, "number"],
+        //["foo", "string"],
+        //[null, "null"],
+        //[{}, "object"],
+        //[{ a: "a" }, "object"],
+        //[[1, 2, 3], "array"]
+    //]
+
+    //for (const [value, type] of VALUE_TYPE_TEST_DATA) {
+        //it(`setWhenIdle() and get() should work correctly with value type: ${type}`, async function(done) {
+            //try {
+                //const key = `type.test.${type}`
+                //await deferredStorage.setWhenIdle(key, value)
+
+                //const actual = deferredStorage.get(key)
+                //expect(actual).toEqual(value)
+                //done()
+            //} catch (e) {
+                //done.fail(e)
+            //}
+        //})
+    //}
+
+    //it("setWhenIdle() when call multiple time, it set the key with the value from the last call", async function(done) {
+        //try {
+            //const values = range(100)
+            //const ps = values.map(v =>
+                //deferredStorage.setWhenIdle("order.test", v)
+            //)
+
+            //await Promise.all(ps)
+
+            //expect(localStorage.getItem("order.test")).toEqual("99")
+            //expect(deferredStorage.get("order.test")).toEqual(99)
+
+            //done()
+        //} catch (e) {
+            //done.fail(e)
+        //}
+    //})
+
+    //it("get() should return null if the key does not exist", function() {
+        //expect(deferredStorage.get("not_exist")).toEqual(null)
+    //})
+
+    //it("setWhenIdle(): when setting a key with undefined, no value should be set.", async function(done) {
+        //try {
+            //await deferredStorage.setWhenIdle("undefined_test", undefined)
+
+            //expect(localStorage.getItem("undefined_test")).toEqual(null)
+            //expect(deferredStorage.get("undefined_test")).toEqual(null)
+            //done()
+        //} catch (e) {
+            //done.fail(e)
+        //}
+    //})
+
+    //it("setWhenIdle(): when setting an existing key with undefined, the key should be removed", async function(done) {
+        //try {
+            //localStorage.setItem("undefined_test_2", 1)
+
+            //await deferredStorage.setWhenIdle("undefined_test_2", undefined)
+
+            //expect(localStorage.getItem("undefined_test_2")).toEqual(null)
+            //expect(deferredStorage.get("undefined_test_2")).toEqual(null)
+            //done()
+        //} catch (e) {
+            //done.fail(e)
+        //}
+    //})
+
+    //it("hasPending(): should return true when there are pending set operation, and return false when all set finishes", async function(done) {
+        //try {
+            //const pending = deferredStorage.setWhenIdle("has_pending_test_1", 1)
+
+            //expect(deferredStorage.hasPending()).toEqual(true)
+
+            //await pending
+            //expect(deferredStorage.hasPending()).toEqual(false)
+
+            //done()
+        //} catch (e) {
+            //done.fail(e)
+        //}
+    //})
+
+    //it("hasPending(): should return false when there are no pending operations", function() {
+        //expect(deferredStorage.hasPending()).toEqual(false)
+    //})
+
+    //it("remove(): should remove an existing key from the localStorage", function() {
+        //localStorage.setItem("remove_test", 1)
+        //deferredStorage.remove("remove_test")
+
+        //expect(localStorage.getItem("remove_test")).toEqual(null)
+        //expect(deferredStorage.get("remove_test")).toEqual(null)
+    //})
+
+    //it("remove(): should not result in error when call with non-exist key", function() {
+        //deferredStorage.remove("remove_test_2")
+    //})
+
+    it("remove(): should cancel the any pending setWhenIdle() with the same key", async function(done) {
         try {
-            await deferredStorage.setWhenIdle("five", 5)
-            const v = await deferredStorage.getItem("five")
-
-            expect(v).toEqual(5)
-            done()
-        } catch (e) {
-            done.fail(e)
-        }
-    })
-
-    const valuetests = [
-        [1, "number"],
-        ["foo", "string"],
-        [null, "null"],
-        [{}, "object"],
-        [{ a: "a" }, "object"],
-        [[1, 2, 3], "array"]
-    ]
-
-    for (const [value, type] of valuetests) {
-        it(`setWhenIdle() and getItem() should work correctly with data type: ${type}`, async function(done) {
-            try {
-                const key = `type.test.${type}`
-                await deferredStorage.setWhenIdle(key, value)
-                const actual = await deferredStorage.getItem(key)
-
-                expect(actual).toEqual(value)
-                done()
-            } catch (e) {
-                done.fail(e)
-            }
-        })
-    }
-
-    it("removeItem()", async function(done) {
-        try {
-            const k = "test.remove.basic"
-            await deferredStorage.setWhenIdle(k, 5)
-            let v = await deferredStorage.getItem(k)
-            expect(v).toEqual(5)
-
-            await deferredStorage.removeItem(k)
-            v = await deferredStorage.getItem(k)
-            expect(v).toBeNull()
-
-            done()
-        } catch (e) {
-            done.fail(e)
-        }
-    })
-
-    it("removeItem() should work fine with non-exist key", async function(done) {
-        try {
-            const k = "test.remove.nonexist." + Date.now()
-            await deferredStorage.removeItem(k)
-
-            expect(true).toEqual(true) // just to surpress warnning
-            done()
-        } catch (e) {
-            done.fail(e)
-        }
-    })
-
-    it("setWhenIdle() should preserve the 'order of call' transaction property", async function(done) {
-        try {
-            const values = range(100)
-            const ps = values.map(v =>
-                deferredStorage.setWhenIdle("order.test", v)
+            const pending = deferredStorage.setWhenIdle(
+                "remove_pending_test",
+                1
             )
 
-            await Promise.all(ps)
+            deferredStorage.remove("remove_pending_test")
+            await pending
 
-            const v = await deferredStorage.getItem("order.test")
-            expect(v).toEqual(99)
-
-            done()
+            expect(localStorage.getItem("remove_pending_test")).toEqual(null)
+            expect(deferredStorage.get("remove_pending_test")).toEqual(null)
         } catch (e) {
             done.fail(e)
         }
     })
 
-    it("clear()", async function(done) {
-        try {
-            const values = range(10)
-            const sets = values.map(v =>
-                deferredStorage.setWhenIdle(`clear.test.${v}`, v)
-            )
+    //it("clear(): shoule remove all keys from the localStorage", function() {
+        //localStorage.setItem("clear_test_a", 1)
+        //localStorage.setItem("clear_test_b", 2)
 
-            await Promise.all(sets)
+        //deferredStorage.clear()
 
-            deferredStorage.clear()
+        //expect(localStorage.length).toEqual(0)
+    //})
 
-            const gets = values.map(v =>
-                deferredStorage.getItem(`clear.test.${v}`)
-            )
-            const nvalues = await Promise.all(gets)
+    //it("clear(): should cause all pending setWhenIdle() call to resolve", async function(done) {
+        //try {
+            //const values = range(10)
+            //const pendings = values.map(v =>
+                //deferredStorage.setWhenIdle(`clear.test.${v}`, v)
+            //)
 
-            nvalues.forEach(v => expect(v).toBeNull())
+            //deferredStorage.clear()
 
-            done()
-        } catch (e) {
-            done.fail(e)
-        }
-    })
+            //await Promise.all(pendings)
+            //expect(localStorage.length).toEqual(0)
+
+            //done()
+        //} catch (e) {
+            //done.fail(e)
+        //}
+    //})
 })

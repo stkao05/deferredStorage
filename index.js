@@ -1,15 +1,16 @@
 const deferredStorage = {
     pending: {},
-    setTime: {},
+    lastSetTime: {},
     timeout: 100,
 
-    setWhenIdle: function(key, value) {
+    setWhenIdle: function(key, value, { timeout } = {}) {
         let p = this.pending[key]
-
         if (p) {
             p.value = value
             return p.promise
         }
+
+        timeout = timeout === undefined ? this.timeout : timeout
 
         p = {}
         const promise = new Promise((resolve, reject) => {
@@ -17,14 +18,13 @@ const deferredStorage = {
         })
         const id = window.requestIdleCallback(
             deadline => this.processPending(key, deadline),
-            {
-                timeout: this.timeout
-            }
+            { timeout }
         )
 
+        p.id = id
         p.value = value
         p.promise = promise
-        p.id = id
+        p.timeout = timeout
         this.pending[key] = p
 
         return promise
@@ -33,7 +33,7 @@ const deferredStorage = {
     processPending: function(key, deadline) {
         if (!this.pending[key]) return
 
-        const { value, resolve, reject, skipped } = this.pending[key]
+        const { value, resolve, reject, timeout } = this.pending[key]
 
         if (value === undefined) {
             window.localStorage.removeItem(key)
@@ -42,19 +42,18 @@ const deferredStorage = {
             return
         }
 
+        // defer the set operation again when there is
+        // not enough idle time
         if (
-            this.setTime[key] &&
-            this.setTime[key] > deadline.timeRemaining &&
-            !skipped
+            this.lastSetTime[key] &&
+            this.lastSetTime[key] > deadline.timeRemaining &&
+            !deadline.didTimeout
         ) {
             const id = window.requestIdleCallback(
                 deadline => this.processPending(key, deadline),
-                {
-                    timeout: this.timeout
-                }
+                { timeout }
             )
             this.pending[key].id = id
-            this.pending[key].skipped = true
             return
         }
 
@@ -64,7 +63,7 @@ const deferredStorage = {
             window.localStorage.setItem(key, json)
             const end = Date.now()
 
-            this.setTime[key] = end - start
+            this.lastSetTime[key] = end - start
             resolve()
         } catch (e) {
             reject(e)
@@ -73,32 +72,30 @@ const deferredStorage = {
         }
     },
 
-    getItem: function(key) {
-        if (this.pending[key]) {
-            const { promise, value } = this.pending[key]
-            return promise.resolve(() => value)
-        }
-
-        return new Promise((resolve, reject) => {
-            try {
-                const value = this.getItemImmediately(key)
-                resolve(value)
-            } catch (e) {
-                reject(e)
-            }
-        })
+    hasPending: function() {
+        return Object.keys(this.pending).length > 0
     },
 
-    getItemImmediately: function(key) {
+    /*
+     * TODO: maybe return the pending value?
+     */
+    get: function(key) {
         const json = window.localStorage.getItem(key)
         return json === null ? null : JSON.parse(json)
     },
 
-    removeItem: function(key) {
+    remove: function(key) {
         window.localStorage.removeItem(key)
+
+        if (!this.pending[key]) return
+
+        const { id, resolve } = this.pending[key]
+        resolve()
+        window.cancelIdleCallback(id)
+        delete this.pending[key]
     },
 
-    commitAll: function() {
+    commit: function() {
         for (const key in this.pending) {
             const { id, value, resolve, reject } = this.pending[key]
 
