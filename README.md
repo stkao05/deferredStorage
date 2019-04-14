@@ -1,6 +1,8 @@
 # deferredStorage
 
-`deferredStorage` is a key-value storage that enables a more performant usage of `localStorage` via making use of the [Background Tasks API](https://www.w3.org/TR/requestidlecallback/) (requestIdleCallback)
+`deferredStorage` is a key-value storage that enables a performant usage of localStorage with the [Background Tasks API](https://www.w3.org/TR/requestidlecallback/)(requestIdleCallback).
+
+## Motivations
 
 In the current state of browsers, `localStorage` is still the most stable storage options. However, `localStorage` could pose performance issues when storing data with considerable size or with complex structure due to these properties of `localStorage`:
 - It is a synchronous storage
@@ -11,7 +13,7 @@ In the current state of browsers, `localStorage` is still the most stable storag
 
 ## API
 
-##### `setWhenIdle(key, value, options)`
+#### `setWhenIdle(key, value, options)`
 
 - `key`: string
 - `value`: Any seriaizable value
@@ -20,3 +22,22 @@ In the current state of browsers, `localStorage` is still the most stable storag
 
 __Return__
 A Promise that resolves when the value has been successfully persisted, or when rejects when failed.
+
+
+#### `hasPending()`
+
+__Return__
+True when there are any set operations that have not been carried out.
+
+
+#### `commit()`
+
+Forcely complete all pending set operations. Notes that it will carry out all pending set operations synchronously in the same call frame.
+It is mostly called right before window is close to make sure all datas are persisted.
+
+```js
+window.addEventListener('beforeunload', function() {
+	deferredStorage.commit()
+});
+```
+

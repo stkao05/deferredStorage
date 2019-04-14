@@ -74,7 +74,7 @@ describe("deferredStorage", function () {
         };
     }());
 
-    it("setItem()/getItem() basic test", function () {
+    it("setWhenIdle()/getItem() basic test", function () {
         var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(done) {
             var v;
             return regeneratorRuntime.wrap(function _callee2$(_context2) {
@@ -83,7 +83,7 @@ describe("deferredStorage", function () {
                         case 0:
                             _context2.prev = 0;
                             _context2.next = 3;
-                            return _index2.default.setItem("five", 5);
+                            return _index2.default.setWhenIdle("five", 5);
 
                         case 3:
                             _context2.next = 5;
@@ -120,7 +120,7 @@ describe("deferredStorage", function () {
     var valuetests = [[1, "number"], ["foo", "string"], [null, "null"], [{}, "object"], [{ a: "a" }, "object"], [[1, 2, 3], "array"]];
 
     var _loop = function _loop(value, type) {
-        it("setItem() and getItem() should work correctly with data type: " + type, function () {
+        it("setWhenIdle() and getItem() should work correctly with data type: " + type, function () {
             var _ref9 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee7(done) {
                 var key, actual;
                 return regeneratorRuntime.wrap(function _callee7$(_context7) {
@@ -130,7 +130,7 @@ describe("deferredStorage", function () {
                                 _context7.prev = 0;
                                 key = "type.test." + type;
                                 _context7.next = 4;
-                                return _index2.default.setItem(key, value);
+                                return _index2.default.setWhenIdle(key, value);
 
                             case 4:
                                 _context7.next = 6;
@@ -205,7 +205,7 @@ describe("deferredStorage", function () {
                             _context3.prev = 0;
                             k = "test.remove.basic";
                             _context3.next = 4;
-                            return _index2.default.setItem(k, 5);
+                            return _index2.default.setWhenIdle(k, 5);
 
                         case 4:
                             _context3.next = 6;
@@ -289,7 +289,7 @@ describe("deferredStorage", function () {
         };
     }());
 
-    it("setItem() should preserve the 'order of call' transaction property", function () {
+    it("setWhenIdle() should preserve the 'order of call' transaction property", function () {
         var _ref7 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5(done) {
             var values, ps, v;
             return regeneratorRuntime.wrap(function _callee5$(_context5) {
@@ -299,7 +299,7 @@ describe("deferredStorage", function () {
                             _context5.prev = 0;
                             values = range(100);
                             ps = values.map(function (v) {
-                                return _index2.default.setItem("order.test", v);
+                                return _index2.default.setWhenIdle("order.test", v);
                             });
                             _context5.next = 5;
                             return Promise.all(ps);
@@ -346,7 +346,7 @@ describe("deferredStorage", function () {
                             _context6.prev = 0;
                             values = range(10);
                             sets = values.map(function (v) {
-                                return _index2.default.setItem("clear.test." + v, v);
+                                return _index2.default.setWhenIdle("clear.test." + v, v);
                             });
                             _context6.next = 5;
                             return Promise.all(sets);
@@ -404,7 +404,7 @@ var deferredStorage = {
     setTime: {},
     timeout: 100,
 
-    setItem: function setItem(key, value) {
+    setWhenIdle: function setWhenIdle(key, value) {
         var _this = this;
 
         var p = this.pending[key];
@@ -521,14 +521,14 @@ var deferredStorage = {
             if (value === undefined) {
                 window.localStorage.removeItem(key);
                 resolve();
-            }
-
-            try {
-                var json = JSON.stringify(value);
-                window.localStorage.setItem(key, json);
-                resolve();
-            } catch (e) {
-                reject(e);
+            } else {
+                try {
+                    var json = JSON.stringify(value);
+                    window.localStorage.setItem(key, json);
+                    resolve();
+                } catch (e) {
+                    reject(e);
+                }
             }
 
             window.cancelIdleCallback(id);

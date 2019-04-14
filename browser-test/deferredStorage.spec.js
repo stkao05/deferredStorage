@@ -31,9 +31,9 @@ describe("deferredStorage", () => {
         }
     })
 
-    it("setItem()/getItem() basic test", async function(done) {
+    it("setWhenIdle()/getItem() basic test", async function(done) {
         try {
-            await deferredStorage.setItem("five", 5)
+            await deferredStorage.setWhenIdle("five", 5)
             const v = await deferredStorage.getItem("five")
 
             expect(v).toEqual(5)
@@ -53,10 +53,10 @@ describe("deferredStorage", () => {
     ]
 
     for (const [value, type] of valuetests) {
-        it(`setItem() and getItem() should work correctly with data type: ${type}`, async function(done) {
+        it(`setWhenIdle() and getItem() should work correctly with data type: ${type}`, async function(done) {
             try {
                 const key = `type.test.${type}`
-                await deferredStorage.setItem(key, value)
+                await deferredStorage.setWhenIdle(key, value)
                 const actual = await deferredStorage.getItem(key)
 
                 expect(actual).toEqual(value)
@@ -70,7 +70,7 @@ describe("deferredStorage", () => {
     it("removeItem()", async function(done) {
         try {
             const k = "test.remove.basic"
-            await deferredStorage.setItem(k, 5)
+            await deferredStorage.setWhenIdle(k, 5)
             let v = await deferredStorage.getItem(k)
             expect(v).toEqual(5)
 
@@ -96,11 +96,11 @@ describe("deferredStorage", () => {
         }
     })
 
-    it("setItem() should preserve the 'order of call' transaction property", async function(done) {
+    it("setWhenIdle() should preserve the 'order of call' transaction property", async function(done) {
         try {
             const values = range(100)
             const ps = values.map(v =>
-                deferredStorage.setItem("order.test", v)
+                deferredStorage.setWhenIdle("order.test", v)
             )
 
             await Promise.all(ps)
@@ -118,7 +118,7 @@ describe("deferredStorage", () => {
         try {
             const values = range(10)
             const sets = values.map(v =>
-                deferredStorage.setItem(`clear.test.${v}`, v)
+                deferredStorage.setWhenIdle(`clear.test.${v}`, v)
             )
 
             await Promise.all(sets)
