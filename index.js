@@ -60,6 +60,8 @@ const deferredStorage = {
         try {
             const start = Date.now()
             const json = JSON.stringify(value)
+            if (json === undefined) throw new Error("Non JSON serializable value")
+
             window.localStorage.setItem(key, json)
             const end = Date.now()
 
@@ -105,6 +107,8 @@ const deferredStorage = {
             } else {
                 try {
                     const json = JSON.stringify(value)
+                    if (json === undefined) throw new Error("Non JSON serializable value")
+
                     window.localStorage.setItem(key, json)
                     resolve()
                 } catch (e) {

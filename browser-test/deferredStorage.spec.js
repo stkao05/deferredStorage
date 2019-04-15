@@ -92,6 +92,20 @@ describe("deferredStorage", () => {
         }
     })
 
+    it("setWhenIdle(): when setting non-serializable data, the result promise should reject", async function(done) {
+        const pending = deferredStorage.setWhenIdle(
+            "non_serializable",
+            () => {}
+        )
+
+        try {
+            await pending
+            done.fail("error should be thrown")
+        } catch (e) {
+            done()
+        }
+    })
+
     it("get(): should return null if the key does not exist", function() {
         expect(deferredStorage.get("not_exist")).toEqual(null)
     })
