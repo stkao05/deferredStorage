@@ -43,7 +43,18 @@ Return: A Promise that resolves when the value has been successfully persisted, 
 
 #### `hasPending()`
 
-Return: True when there are any set operations that have not been carried out.
+Return true when there are any `setWhenIdle` calls that have not been completed yet; return false otherwise.
+
+```js
+const p = deferredStorage.setWhenIdle("foo", 1)
+
+// true
+console.log(deferredStorage.hasPending())
+
+// false
+p.then(() => console.log(deferredStorage.hasPending()))
+```
+
 
 
 #### `commit()`
