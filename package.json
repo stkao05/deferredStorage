@@ -1,5 +1,5 @@
 {
-    "name": "deferredStorage",
+    "name": "deferred-storage",
     "version": "0.0.1",
     "description": "A key-value storage that enables a performant usage of localStorage with the Background Tasks API",
     "devDependencies": {

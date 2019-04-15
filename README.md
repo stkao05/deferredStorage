@@ -1,5 +1,7 @@
 # deferredStorage
 
+[![Build Status](https://travis-ci.org/stkao05/deferredStorage.svg?branch=master)](https://travis-ci.org/stkao05/deferredStorage)
+
 `deferredStorage` is a key-value storage that enables a performant usage of localStorage with the [Background Tasks API](https://www.w3.org/TR/requestidlecallback/) (`requestIdleCallback`).
 
 ## Motivations
