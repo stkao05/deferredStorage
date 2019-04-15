@@ -45,7 +45,7 @@ const deferredStorage = {
         // defer the set operation again when there is
         // not enough idle time
         if (
-            this.lastSetTime[key] &&
+            this.lastSetTime[key] !== undefined &&
             this.lastSetTime[key] > deadline.timeRemaining &&
             !deadline.didTimeout
         ) {
