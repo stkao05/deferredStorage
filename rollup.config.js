@@ -5,6 +5,7 @@ export default {
     plugins: [
         babel({
             babelrc: false,
+            presets: ["@babel/preset-env"],
             exclude: "node_modules/**"
         })
     ],

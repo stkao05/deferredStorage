@@ -1,10 +1,11 @@
 {
     "name": "deferred-storage",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "description": "A key-value storage that enables a performant usage of localStorage with the Background Tasks API",
     "devDependencies": {
         "@babel/cli": "^7.4.3",
         "@babel/core": "^7.4.3",
+        "@babel/preset-env": "^7.4.3",
         "babel-preset-env": "^1.7.0",
         "eslint": "^4.14.0",
         "eslint-config-prettier": "^2.9.0",
@@ -15,13 +16,16 @@
         "karma-jasmine": "^2.0.1",
         "karma-rollup-preprocessor": "^7.0.0",
         "rollup": "^1.10.0",
-        "rollup-plugin-babel": "^4.3.2"
+        "rollup-plugin-babel": "^4.3.2",
+        "uglify-js": "^3.5.4"
     },
     "main": "dist/index.umd.js",
     "module": "dist/index.esm.js",
     "scripts": {
         "lint": "eslint ./index.js",
-        "build": "rollup -c",
+        "build": "rollup -c && npm run compress-iife && npm run compress-amd",
+        "compress-iife": "uglifyjs --compress --mangle -o dist/deferred-storage-iife.min.js dist/deferred-storage-iife.js",
+        "compress-amd": "uglifyjs --compress --mangle -o dist/deferred-storage-amd.min.js dist/deferred-storage-amd.js",
         "test": "karma start --single-run true browser-test/karma.config.js",
         "test-dev": "karma start browser-test/karma.config.js",
         "jest": "jest",
