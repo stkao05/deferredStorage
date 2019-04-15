@@ -5,13 +5,12 @@ module.exports = function(config) {
         preprocessors: {
             "./*.spec.js": ["browserify"]
         },
-
         browserify: {
             debug: true,
             transform: ["babelify"]
         },
         colors: true,
         logLevel: config.LOG_INFO,
-        browsers: ["Chrome"]
+        browsers: ["ChromeHeadless"]
     })
 }

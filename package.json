@@ -25,8 +25,10 @@
         "build-umd": "BABEL_ENV=umd babel index.js -o dist/index.umd.js",
         "build-esm": "BABEL_ENV=esm babel index.js -o dist/index.esm.js",
         "build": "npm run build-umd && npm run build-esm",
-        "test": "karma start browser-test/karma.config.js",
-        "jest": "jest"
+        "test": "karma start --single-run true browser-test/karma.config.js",
+        "test-dev": "karma start browser-test/karma.config.js",
+        "jest": "jest",
+        "jest-dev": "jest --watch"
     },
     "babel": {
         "presets": [
