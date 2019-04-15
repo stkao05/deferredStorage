@@ -48,7 +48,7 @@ describe("deferredStorage", () => {
         })
     }
 
-    it("setWhenIdle() when call multiple time, it set the key with the value from the last call", async function(done) {
+    it("setWhenIdle(): when call multiple time, it set the key with the value from the last call", async function(done) {
         try {
             const values = range(100)
             const ps = values.map(v =>
@@ -64,10 +64,6 @@ describe("deferredStorage", () => {
         } catch (e) {
             done.fail(e)
         }
-    })
-
-    it("get() should return null if the key does not exist", function() {
-        expect(deferredStorage.get("not_exist")).toEqual(null)
     })
 
     it("setWhenIdle(): when setting a key with undefined, no value should be set.", async function(done) {
@@ -94,6 +90,10 @@ describe("deferredStorage", () => {
         } catch (e) {
             done.fail(e)
         }
+    })
+
+    it("get(): should return null if the key does not exist", function() {
+        expect(deferredStorage.get("not_exist")).toEqual(null)
     })
 
     it("hasPending(): should return true when there are pending set operation, and return false when all set finishes", async function(done) {
@@ -170,5 +170,22 @@ describe("deferredStorage", () => {
         } catch (e) {
             done.fail(e)
         }
+    })
+
+    it("commit(): shoule resolve all pending set operations immediately", async function(done) {
+        expect(deferredStorage.hasPending()).toEqual(false)
+
+        const p1 = deferredStorage.setWhenIdle("one", 1)
+        const p2 = deferredStorage.setWhenIdle("two", 2)
+
+        expect(deferredStorage.hasPending()).toEqual(true)
+
+        deferredStorage.commit()
+
+        expect(localStorage.getItem("one")).toEqual("1")
+        expect(localStorage.getItem("two")).toEqual("2")
+
+        await Promise.all([p1, p2])
+        done()
     })
 })
