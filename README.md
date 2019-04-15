@@ -1,24 +1,30 @@
 # deferredStorage
-
 [![Build Status](https://travis-ci.org/stkao05/deferredStorage.svg?branch=master)](https://travis-ci.org/stkao05/deferredStorage)
+[![gzip size](https://img.badgesize.io/https://unpkg.com/deferred-storage@0.0.2/dist/deferred-storage-iife.min.js?compression=gzip)](https://github.com/stkao05/deferredStorage)
 
-[![gzip size](https://travis-ci.org/stkao05/deferredStorage.svg?branch=master)](https://travis-ci.org/stkao05/deferredStorage)
+deferredStorage is a key-value storage that enables a performant usage of localStorage with the [Background Tasks API](https://www.w3.org/TR/requestidlecallback/) (`requestIdleCallback`).
 
-`deferredStorage` is a key-value storage that enables a performant usage of localStorage with the [Background Tasks API](https://www.w3.org/TR/requestidlecallback/) (`requestIdleCallback`).
-
-## Motivations
-
-In the current state of browsers, `localStorage` is still the most stable storage options. However, `localStorage` could pose performance issues when storing data with considerable size or with complex structure due to these properties of `localStorage`:
-- It is a synchronous storage
+localStorage is still by far the most stable browser storage, but  potential performance issues could arise when storing data with considerable size or with complex structure due to these properties: 
+- localStorage is a synchronous storage
 - It only stores string value. When storing non-string value, serialization (i.e. `JSON.strinify`) is needed. Serialization could take up a considerable amount of time when data is large or has a complex structure.
 
-`deferredStorage` address these issues via deferring the JSON serialization and the storing operation with the `requestIdleCallback`; value will not be persisted in the same call frame but only when the browser is in the idle state.
+deferredStorage address these issues via deferring the JSON serialization and the storing operation with the `requestIdleCallback`; values will not be persisted in the same call frame but only when the browser is in the idle state.
 
-## API Design
 
-Only `setWhenIdle()` call will make processed in the deferred fashion while the rest of API will be carried out synchronously.
+# Usage
 
-This design is made for the practical reason that: data serialization and `localStorage.setItem()` are the only potentially expensive operation. All other `localStorage` APIs are quite performant, and hence could be called directly without performance penality.
+```
+npm install deferred-storage
+```
+
+```js
+import deferredStorage from 'deferred-storage';
+
+deferredStorage
+	.setWhenIdle("foo", 1)
+	.then(() => console.log("value is saved"))
+```
+
 
 
 ## API
@@ -46,7 +52,7 @@ Forcely complete all pending set operations synchronously in the same call frame
 
 ```js
 window.addEventListener('beforeunload', function() {
-	deferredStorage.commit()
+    deferredStorage.commit()
 });
 ```
 
@@ -64,9 +70,10 @@ Remove key from the localStorage. Synchronous operation.
 
 Empty all keys out of the localStorage.
 
+## API Design
 
-__Installing__
+Only `deferredStorage.setWhenIdle()` call will be processed in idle time while the rest of the API will be carried out synchronously.
 
-```
-npm install deferred-storage
-```
+This design is made for the practical reason that: data serialization and `localStorage.setItem()` are the only potentially expensive operations. All other localStorage APIs are performant and could be called directly without performance concerns.
+
+
