@@ -1,6 +1,6 @@
 {
     "name": "deferred-storage",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "description": "A key-value storage that enables a performant usage of localStorage with the Background Tasks API",
     "devDependencies": {
         "@babel/cli": "^7.4.3",
@@ -64,11 +64,9 @@
         ]
     },
     "keywords": [
-        "indexeddb",
-        "Indexed DB",
-        "IDB",
-        "storage",
-        "database"
+        "localStorage",
+        "requestIdleCallback",
+        "storage"
     ],
     "prettier": {
         "printWidth": 80,
