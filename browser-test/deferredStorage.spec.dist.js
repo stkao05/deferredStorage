@@ -1,6 +1,8 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 "use strict";
 
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
 require("babel-polyfill");
 
 var _index = require("../index.js");
@@ -23,155 +25,36 @@ describe("deferredStorage", function () {
         _index2.default.clear();
     });
 
-    //it("setWhenIdle() / get() simple test", async function(done) {
-    //try {
-    //await deferredStorage.setWhenIdle("five", 5)
-
-    //expect(localStorage.getItem("five")).toEqual("5")
-    //expect(deferredStorage.get("five")).toEqual(5)
-    //done()
-    //} catch (e) {
-    //done.fail(e)
-    //}
-    //})
-
-    //const VALUE_TYPE_TEST_DATA = [
-    //[1, "number"],
-    //["foo", "string"],
-    //[null, "null"],
-    //[{}, "object"],
-    //[{ a: "a" }, "object"],
-    //[[1, 2, 3], "array"]
-    //]
-
-    //for (const [value, type] of VALUE_TYPE_TEST_DATA) {
-    //it(`setWhenIdle() and get() should work correctly with value type: ${type}`, async function(done) {
-    //try {
-    //const key = `type.test.${type}`
-    //await deferredStorage.setWhenIdle(key, value)
-
-    //const actual = deferredStorage.get(key)
-    //expect(actual).toEqual(value)
-    //done()
-    //} catch (e) {
-    //done.fail(e)
-    //}
-    //})
-    //}
-
-    //it("setWhenIdle() when call multiple time, it set the key with the value from the last call", async function(done) {
-    //try {
-    //const values = range(100)
-    //const ps = values.map(v =>
-    //deferredStorage.setWhenIdle("order.test", v)
-    //)
-
-    //await Promise.all(ps)
-
-    //expect(localStorage.getItem("order.test")).toEqual("99")
-    //expect(deferredStorage.get("order.test")).toEqual(99)
-
-    //done()
-    //} catch (e) {
-    //done.fail(e)
-    //}
-    //})
-
-    //it("get() should return null if the key does not exist", function() {
-    //expect(deferredStorage.get("not_exist")).toEqual(null)
-    //})
-
-    //it("setWhenIdle(): when setting a key with undefined, no value should be set.", async function(done) {
-    //try {
-    //await deferredStorage.setWhenIdle("undefined_test", undefined)
-
-    //expect(localStorage.getItem("undefined_test")).toEqual(null)
-    //expect(deferredStorage.get("undefined_test")).toEqual(null)
-    //done()
-    //} catch (e) {
-    //done.fail(e)
-    //}
-    //})
-
-    //it("setWhenIdle(): when setting an existing key with undefined, the key should be removed", async function(done) {
-    //try {
-    //localStorage.setItem("undefined_test_2", 1)
-
-    //await deferredStorage.setWhenIdle("undefined_test_2", undefined)
-
-    //expect(localStorage.getItem("undefined_test_2")).toEqual(null)
-    //expect(deferredStorage.get("undefined_test_2")).toEqual(null)
-    //done()
-    //} catch (e) {
-    //done.fail(e)
-    //}
-    //})
-
-    //it("hasPending(): should return true when there are pending set operation, and return false when all set finishes", async function(done) {
-    //try {
-    //const pending = deferredStorage.setWhenIdle("has_pending_test_1", 1)
-
-    //expect(deferredStorage.hasPending()).toEqual(true)
-
-    //await pending
-    //expect(deferredStorage.hasPending()).toEqual(false)
-
-    //done()
-    //} catch (e) {
-    //done.fail(e)
-    //}
-    //})
-
-    //it("hasPending(): should return false when there are no pending operations", function() {
-    //expect(deferredStorage.hasPending()).toEqual(false)
-    //})
-
-    //it("remove(): should remove an existing key from the localStorage", function() {
-    //localStorage.setItem("remove_test", 1)
-    //deferredStorage.remove("remove_test")
-
-    //expect(localStorage.getItem("remove_test")).toEqual(null)
-    //expect(deferredStorage.get("remove_test")).toEqual(null)
-    //})
-
-    //it("remove(): should not result in error when call with non-exist key", function() {
-    //deferredStorage.remove("remove_test_2")
-    //})
-
-    it("remove(): should cancel the any pending setWhenIdle() with the same key", function () {
+    it("setWhenIdle() / get() simple test", function () {
         var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(done) {
-            var pending;
             return regeneratorRuntime.wrap(function _callee$(_context) {
                 while (1) {
                     switch (_context.prev = _context.next) {
                         case 0:
                             _context.prev = 0;
-                            pending = _index2.default.setWhenIdle("remove_pending_test", 1);
+                            _context.next = 3;
+                            return _index2.default.setWhenIdle("five", 5);
 
+                        case 3:
 
-                            _index2.default.remove("remove_pending_test");
-                            _context.next = 5;
-                            return pending;
-
-                        case 5:
-
-                            expect(localStorage.getItem("remove_pending_test")).toEqual(null);
-                            expect(_index2.default.get("remove_pending_test")).toEqual(null);
-                            _context.next = 12;
+                            expect(localStorage.getItem("five")).toEqual("5");
+                            expect(_index2.default.get("five")).toEqual(5);
+                            done();
+                            _context.next = 11;
                             break;
 
-                        case 9:
-                            _context.prev = 9;
+                        case 8:
+                            _context.prev = 8;
                             _context.t0 = _context["catch"](0);
 
                             done.fail(_context.t0);
 
-                        case 12:
+                        case 11:
                         case "end":
                             return _context.stop();
                     }
                 }
-            }, _callee, this, [[0, 9]]);
+            }, _callee, this, [[0, 8]]);
         }));
 
         return function (_x) {
@@ -179,32 +62,356 @@ describe("deferredStorage", function () {
         };
     }());
 
-    //it("clear(): shoule remove all keys from the localStorage", function() {
-    //localStorage.setItem("clear_test_a", 1)
-    //localStorage.setItem("clear_test_b", 2)
+    var VALUE_TYPE_TEST_DATA = [[1, "number"], ["foo", "string"], [null, "null"], [{}, "object"], [{ a: "a" }, "object"], [[1, 2, 3], "array"]];
 
-    //deferredStorage.clear()
+    var _loop = function _loop(value, type) {
+        it("setWhenIdle() and get() should work correctly with value type: " + type, function () {
+            var _ref10 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee8(done) {
+                var key, actual;
+                return regeneratorRuntime.wrap(function _callee8$(_context8) {
+                    while (1) {
+                        switch (_context8.prev = _context8.next) {
+                            case 0:
+                                _context8.prev = 0;
+                                key = "type.test." + type;
+                                _context8.next = 4;
+                                return _index2.default.setWhenIdle(key, value);
 
-    //expect(localStorage.length).toEqual(0)
-    //})
+                            case 4:
+                                actual = _index2.default.get(key);
 
-    //it("clear(): should cause all pending setWhenIdle() call to resolve", async function(done) {
-    //try {
-    //const values = range(10)
-    //const pendings = values.map(v =>
-    //deferredStorage.setWhenIdle(`clear.test.${v}`, v)
-    //)
+                                expect(actual).toEqual(value);
+                                done();
+                                _context8.next = 12;
+                                break;
 
-    //deferredStorage.clear()
+                            case 9:
+                                _context8.prev = 9;
+                                _context8.t0 = _context8["catch"](0);
 
-    //await Promise.all(pendings)
-    //expect(localStorage.length).toEqual(0)
+                                done.fail(_context8.t0);
 
-    //done()
-    //} catch (e) {
-    //done.fail(e)
-    //}
-    //})
+                            case 12:
+                            case "end":
+                                return _context8.stop();
+                        }
+                    }
+                }, _callee8, this, [[0, 9]]);
+            }));
+
+            return function (_x8) {
+                return _ref10.apply(this, arguments);
+            };
+        }());
+    };
+
+    var _iteratorNormalCompletion = true;
+    var _didIteratorError = false;
+    var _iteratorError = undefined;
+
+    try {
+        for (var _iterator = VALUE_TYPE_TEST_DATA[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+            var _ref2 = _step.value;
+
+            var _ref3 = _slicedToArray(_ref2, 2);
+
+            var value = _ref3[0];
+            var type = _ref3[1];
+
+            _loop(value, type);
+        }
+    } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+    } finally {
+        try {
+            if (!_iteratorNormalCompletion && _iterator.return) {
+                _iterator.return();
+            }
+        } finally {
+            if (_didIteratorError) {
+                throw _iteratorError;
+            }
+        }
+    }
+
+    it("setWhenIdle() when call multiple time, it set the key with the value from the last call", function () {
+        var _ref4 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(done) {
+            var values, ps;
+            return regeneratorRuntime.wrap(function _callee2$(_context2) {
+                while (1) {
+                    switch (_context2.prev = _context2.next) {
+                        case 0:
+                            _context2.prev = 0;
+                            values = range(100);
+                            ps = values.map(function (v) {
+                                return _index2.default.setWhenIdle("order.test", v);
+                            });
+                            _context2.next = 5;
+                            return Promise.all(ps);
+
+                        case 5:
+
+                            expect(localStorage.getItem("order.test")).toEqual("99");
+                            expect(_index2.default.get("order.test")).toEqual(99);
+
+                            done();
+                            _context2.next = 13;
+                            break;
+
+                        case 10:
+                            _context2.prev = 10;
+                            _context2.t0 = _context2["catch"](0);
+
+                            done.fail(_context2.t0);
+
+                        case 13:
+                        case "end":
+                            return _context2.stop();
+                    }
+                }
+            }, _callee2, this, [[0, 10]]);
+        }));
+
+        return function (_x2) {
+            return _ref4.apply(this, arguments);
+        };
+    }());
+
+    it("get() should return null if the key does not exist", function () {
+        expect(_index2.default.get("not_exist")).toEqual(null);
+    });
+
+    it("setWhenIdle(): when setting a key with undefined, no value should be set.", function () {
+        var _ref5 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(done) {
+            return regeneratorRuntime.wrap(function _callee3$(_context3) {
+                while (1) {
+                    switch (_context3.prev = _context3.next) {
+                        case 0:
+                            _context3.prev = 0;
+                            _context3.next = 3;
+                            return _index2.default.setWhenIdle("undefined_test", undefined);
+
+                        case 3:
+
+                            expect(localStorage.getItem("undefined_test")).toEqual(null);
+                            expect(_index2.default.get("undefined_test")).toEqual(null);
+                            done();
+                            _context3.next = 11;
+                            break;
+
+                        case 8:
+                            _context3.prev = 8;
+                            _context3.t0 = _context3["catch"](0);
+
+                            done.fail(_context3.t0);
+
+                        case 11:
+                        case "end":
+                            return _context3.stop();
+                    }
+                }
+            }, _callee3, this, [[0, 8]]);
+        }));
+
+        return function (_x3) {
+            return _ref5.apply(this, arguments);
+        };
+    }());
+
+    it("setWhenIdle(): when setting an existing key with undefined, the key should be removed", function () {
+        var _ref6 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4(done) {
+            return regeneratorRuntime.wrap(function _callee4$(_context4) {
+                while (1) {
+                    switch (_context4.prev = _context4.next) {
+                        case 0:
+                            _context4.prev = 0;
+
+                            localStorage.setItem("undefined_test_2", 1);
+
+                            _context4.next = 4;
+                            return _index2.default.setWhenIdle("undefined_test_2", undefined);
+
+                        case 4:
+
+                            expect(localStorage.getItem("undefined_test_2")).toEqual(null);
+                            expect(_index2.default.get("undefined_test_2")).toEqual(null);
+                            done();
+                            _context4.next = 12;
+                            break;
+
+                        case 9:
+                            _context4.prev = 9;
+                            _context4.t0 = _context4["catch"](0);
+
+                            done.fail(_context4.t0);
+
+                        case 12:
+                        case "end":
+                            return _context4.stop();
+                    }
+                }
+            }, _callee4, this, [[0, 9]]);
+        }));
+
+        return function (_x4) {
+            return _ref6.apply(this, arguments);
+        };
+    }());
+
+    it("hasPending(): should return true when there are pending set operation, and return false when all set finishes", function () {
+        var _ref7 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5(done) {
+            var pending;
+            return regeneratorRuntime.wrap(function _callee5$(_context5) {
+                while (1) {
+                    switch (_context5.prev = _context5.next) {
+                        case 0:
+                            _context5.prev = 0;
+                            pending = _index2.default.setWhenIdle("has_pending_test_1", 1);
+
+
+                            expect(_index2.default.hasPending()).toEqual(true);
+
+                            _context5.next = 5;
+                            return pending;
+
+                        case 5:
+                            expect(_index2.default.hasPending()).toEqual(false);
+
+                            done();
+                            _context5.next = 12;
+                            break;
+
+                        case 9:
+                            _context5.prev = 9;
+                            _context5.t0 = _context5["catch"](0);
+
+                            done.fail(_context5.t0);
+
+                        case 12:
+                        case "end":
+                            return _context5.stop();
+                    }
+                }
+            }, _callee5, this, [[0, 9]]);
+        }));
+
+        return function (_x5) {
+            return _ref7.apply(this, arguments);
+        };
+    }());
+
+    it("hasPending(): should return false when there are no pending operations", function () {
+        expect(_index2.default.hasPending()).toEqual(false);
+    });
+
+    it("remove(): should remove an existing key from the localStorage", function () {
+        localStorage.setItem("remove_test", 1);
+        _index2.default.remove("remove_test");
+
+        expect(localStorage.getItem("remove_test")).toEqual(null);
+        expect(_index2.default.get("remove_test")).toEqual(null);
+    });
+
+    it("remove(): should not result in error when call with non-exist key", function () {
+        _index2.default.remove("remove_test_2");
+    });
+
+    it("remove(): should cancel the any pending setWhenIdle() with the same key", function () {
+        var _ref8 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6(done) {
+            var pending;
+            return regeneratorRuntime.wrap(function _callee6$(_context6) {
+                while (1) {
+                    switch (_context6.prev = _context6.next) {
+                        case 0:
+                            _context6.prev = 0;
+                            pending = _index2.default.setWhenIdle("remove_pending_test", 1);
+
+
+                            _index2.default.remove("remove_pending_test");
+                            _context6.next = 5;
+                            return pending;
+
+                        case 5:
+
+                            expect(localStorage.getItem("remove_pending_test")).toEqual(null);
+                            expect(_index2.default.get("remove_pending_test")).toEqual(null);
+                            done();
+                            _context6.next = 13;
+                            break;
+
+                        case 10:
+                            _context6.prev = 10;
+                            _context6.t0 = _context6["catch"](0);
+
+                            done.fail(_context6.t0);
+
+                        case 13:
+                        case "end":
+                            return _context6.stop();
+                    }
+                }
+            }, _callee6, this, [[0, 10]]);
+        }));
+
+        return function (_x6) {
+            return _ref8.apply(this, arguments);
+        };
+    }());
+
+    it("clear(): shoule remove all keys from the localStorage", function () {
+        localStorage.setItem("clear_test_a", 1);
+        localStorage.setItem("clear_test_b", 2);
+
+        _index2.default.clear();
+
+        expect(localStorage.length).toEqual(0);
+    });
+
+    it("clear(): should cause all pending setWhenIdle() call to resolve", function () {
+        var _ref9 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee7(done) {
+            var values, pendings;
+            return regeneratorRuntime.wrap(function _callee7$(_context7) {
+                while (1) {
+                    switch (_context7.prev = _context7.next) {
+                        case 0:
+                            _context7.prev = 0;
+                            values = range(10);
+                            pendings = values.map(function (v) {
+                                return _index2.default.setWhenIdle("clear.test." + v, v);
+                            });
+
+
+                            _index2.default.clear();
+
+                            _context7.next = 6;
+                            return Promise.all(pendings);
+
+                        case 6:
+                            expect(localStorage.length).toEqual(0);
+
+                            done();
+                            _context7.next = 13;
+                            break;
+
+                        case 10:
+                            _context7.prev = 10;
+                            _context7.t0 = _context7["catch"](0);
+
+                            done.fail(_context7.t0);
+
+                        case 13:
+                        case "end":
+                            return _context7.stop();
+                    }
+                }
+            }, _callee7, this, [[0, 10]]);
+        }));
+
+        return function (_x7) {
+            return _ref9.apply(this, arguments);
+        };
+    }());
 });
 
 },{"../index.js":2,"babel-polyfill":3}],2:[function(require,module,exports){

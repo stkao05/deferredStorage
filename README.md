@@ -1,6 +1,6 @@
 # deferredStorage
 
-`deferredStorage` is a key-value storage that enables a performant usage of localStorage with the [Background Tasks API](https://www.w3.org/TR/requestidlecallback/)(requestIdleCallback).
+`deferredStorage` is a key-value storage that enables a performant usage of localStorage with the [Background Tasks API](https://www.w3.org/TR/requestidlecallback/) (`requestIdleCallback`).
 
 ## Motivations
 
@@ -12,7 +12,7 @@ In the current state of browsers, `localStorage` is still the most stable storag
 
 ## API Design
 
-Only `setWhenIdle` will make processed in the deferred fashion while the rest of API will be carried out synchronously.
+Only `setWhenIdle()` call will make processed in the deferred fashion while the rest of API will be carried out synchronously.
 
 This design is made for the practical reason that: data serialization and `localStorage.setItem()` are the only potentially expensive operation. All other `localStorage` APIs are quite performant, and hence could be called directly without performance penality.
 
