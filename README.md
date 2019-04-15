@@ -63,3 +63,8 @@ Remove key from the localStorage. Synchronous operation.
 Empty all keys out of the localStorage.
 
 
+__Installing__
+
+```
+npm install deferred-storage
+```

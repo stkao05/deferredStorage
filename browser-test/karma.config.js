@@ -1,9 +1,23 @@
+var babel = require("rollup-plugin-babel")
+
 module.exports = function(config) {
     config.set({
         frameworks: ["browserify", "jasmine"],
         files: ["./deferredStorage.spec.js"],
         preprocessors: {
-            "./*.spec.js": ["browserify"]
+            "./*.spec.js": ["rollup"]
+        },
+        rollupPreprocessor: {
+            plugins: [
+                babel({
+                    babelrc: false,
+                    exclude: "node_modules/**"
+                })
+            ],
+            output: {
+                format: "iife",
+                name: "deferredStorage.spec.js"
+            }
         },
         browserify: {
             debug: true,
@@ -11,6 +25,6 @@ module.exports = function(config) {
         },
         colors: true,
         logLevel: config.LOG_INFO,
-        browsers: ["Chrome"]
+        browsers: ["ChromeHeadless"]
     })
 }
