@@ -3,7 +3,7 @@ const deferredStorage = {
     lastSetTime: {},
     timeout: 100,
 
-    setWhenIdle: function(key, value, { timeout } = {}) {
+    set: function(key, value, { timeout } = {}) {
         let p = this.pending[key]
         if (p) {
             p.value = value

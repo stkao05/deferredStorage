@@ -21,7 +21,7 @@ npm install deferred-storage
 import deferredStorage from 'deferred-storage';
 
 deferredStorage
-	.setWhenIdle("foo", 1)
+	.set("foo", 1)
 	.then(() => console.log("value is saved"))
 ```
 
@@ -29,7 +29,7 @@ deferredStorage
 
 ## API
 
-#### `setWhenIdle(key, value, options)`
+#### `set(key, value, options)`
 
 Set a key-value data to localStorage when browser is in the idle state.
 
@@ -43,10 +43,10 @@ Return: A Promise that resolves when the value has been successfully persisted, 
 
 #### `hasPending()`
 
-Return true when there are any `setWhenIdle` calls that have not been completed yet; return false otherwise.
+Return true when there are any `set` calls that have not been completed yet; return false otherwise.
 
 ```js
-const p = deferredStorage.setWhenIdle("foo", 1)
+const p = deferredStorage.set("foo", 1)
 
 // true
 console.log(deferredStorage.hasPending())
@@ -80,11 +80,3 @@ Remove key from the localStorage. Synchronous operation.
 #### `clear()`
 
 Empty all keys out of the localStorage.
-
-## API Design
-
-Only `deferredStorage.setWhenIdle()` call will be processed in idle time while the rest of the API will be carried out synchronously.
-
-This design is made for the practical reason that: data serialization and `localStorage.setItem()` are the only potentially expensive operations. All other localStorage APIs are performant and could be called directly without performance concerns.
-
-

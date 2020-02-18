@@ -12,9 +12,9 @@ describe("deferredStorage", () => {
         deferredStorage.clear()
     })
 
-    it("setWhenIdle() / get() simple test", async function(done) {
+    it("set() / get() simple test", async function(done) {
         try {
-            await deferredStorage.setWhenIdle("five", 5)
+            await deferredStorage.set("five", 5)
 
             expect(localStorage.getItem("five")).toEqual("5")
             expect(deferredStorage.get("five")).toEqual(5)
@@ -34,10 +34,10 @@ describe("deferredStorage", () => {
     ]
 
     for (const [value, type] of VALUE_TYPE_TEST_DATA) {
-        it(`setWhenIdle() and get() should work correctly with value type: ${type}`, async function(done) {
+        it(`set() and get() should work correctly with value type: ${type}`, async function(done) {
             try {
                 const key = `type.test.${type}`
-                await deferredStorage.setWhenIdle(key, value)
+                await deferredStorage.set(key, value)
 
                 const actual = deferredStorage.get(key)
                 expect(actual).toEqual(value)
@@ -48,11 +48,11 @@ describe("deferredStorage", () => {
         })
     }
 
-    it("setWhenIdle(): when call multiple time, it set the key with the value from the last call", async function(done) {
+    it("set(): when call multiple time, it set the key with the value from the last call", async function(done) {
         try {
             const values = range(100)
             const ps = values.map(v =>
-                deferredStorage.setWhenIdle("order.test", v)
+                deferredStorage.set("order.test", v)
             )
 
             await Promise.all(ps)
@@ -66,9 +66,9 @@ describe("deferredStorage", () => {
         }
     })
 
-    it("setWhenIdle(): when setting a key with undefined, no value should be set.", async function(done) {
+    it("set(): when setting a key with undefined, no value should be set.", async function(done) {
         try {
-            await deferredStorage.setWhenIdle("undefined_test", undefined)
+            await deferredStorage.set("undefined_test", undefined)
 
             expect(localStorage.getItem("undefined_test")).toEqual(null)
             expect(deferredStorage.get("undefined_test")).toEqual(null)
@@ -78,11 +78,11 @@ describe("deferredStorage", () => {
         }
     })
 
-    it("setWhenIdle(): when setting an existing key with undefined, the key should be removed", async function(done) {
+    it("set(): when setting an existing key with undefined, the key should be removed", async function(done) {
         try {
             localStorage.setItem("undefined_test_2", 1)
 
-            await deferredStorage.setWhenIdle("undefined_test_2", undefined)
+            await deferredStorage.set("undefined_test_2", undefined)
 
             expect(localStorage.getItem("undefined_test_2")).toEqual(null)
             expect(deferredStorage.get("undefined_test_2")).toEqual(null)
@@ -92,8 +92,8 @@ describe("deferredStorage", () => {
         }
     })
 
-    it("setWhenIdle(): when setting non-serializable data, the result promise should reject", async function(done) {
-        const pending = deferredStorage.setWhenIdle(
+    it("set(): when setting non-serializable data, the result promise should reject", async function(done) {
+        const pending = deferredStorage.set(
             "non_serializable",
             () => {}
         )
@@ -112,7 +112,7 @@ describe("deferredStorage", () => {
 
     it("hasPending(): should return true when there are pending set operation, and return false when all set finishes", async function(done) {
         try {
-            const pending = deferredStorage.setWhenIdle("has_pending_test_1", 1)
+            const pending = deferredStorage.set("has_pending_test_1", 1)
 
             expect(deferredStorage.hasPending()).toEqual(true)
 
@@ -141,9 +141,9 @@ describe("deferredStorage", () => {
         deferredStorage.remove("remove_test_2")
     })
 
-    it("remove(): should cancel the any pending setWhenIdle() with the same key", async function(done) {
+    it("remove(): should cancel the any pending set() with the same key", async function(done) {
         try {
-            const pending = deferredStorage.setWhenIdle(
+            const pending = deferredStorage.set(
                 "remove_pending_test",
                 1
             )
@@ -168,11 +168,11 @@ describe("deferredStorage", () => {
         expect(localStorage.length).toEqual(0)
     })
 
-    it("clear(): should cause all pending setWhenIdle() call to resolve", async function(done) {
+    it("clear(): should cause all pending set() call to resolve", async function(done) {
         try {
             const values = range(10)
             const pendings = values.map(v =>
-                deferredStorage.setWhenIdle(`clear.test.${v}`, v)
+                deferredStorage.set(`clear.test.${v}`, v)
             )
 
             deferredStorage.clear()
@@ -189,8 +189,8 @@ describe("deferredStorage", () => {
     it("commit(): shoule resolve all pending set operations immediately", async function(done) {
         expect(deferredStorage.hasPending()).toEqual(false)
 
-        const p1 = deferredStorage.setWhenIdle("one", 1)
-        const p2 = deferredStorage.setWhenIdle("two", 2)
+        const p1 = deferredStorage.set("one", 1)
+        const p2 = deferredStorage.set("two", 2)
 
         expect(deferredStorage.hasPending()).toEqual(true)
 
